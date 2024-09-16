@@ -3,6 +3,7 @@ import UserModel from "@/model/User";
 import bcrypt from "bcryptjs";
 
 import { sendVarificationEmail } from "@/helpers/sendVarificationEmail";
+import { sendVarificationEmailSendGrid } from "@/helpers/sendVarificationEmailSendGrid";
 import { error } from "console";
 
 export async function POST(request: Request){
@@ -62,10 +63,13 @@ export async function POST(request: Request){
            await newUser.save()
         }
         //send verfication email
-        const emailResponse = await sendVarificationEmail(
+        // const emailResponse = await sendVarificationEmail(
+        //     email, username, verifyCode
+        // )
+        const emailResponse = await sendVarificationEmailSendGrid(
             email, username, verifyCode
         )
-
+        console.log(emailResponse);
         if(!emailResponse.success){
             return Response.json({
                 success: false,
@@ -90,3 +94,4 @@ export async function POST(request: Request){
         )
     }
 }
+

@@ -8,6 +8,7 @@ const nextConfig = {
     MONGODB_URI: process.env.MONGODB_URI,
     RESEND_API_KEY: process.env.RESEND_API_KEY,
     COHERE_API_KEY: process.env.COHERE_API_KEY,
+    SENDGRID_API_KEY: process.env.SENDGRID_API_KEY,
   },
 };
 // module.exports = {

@@ -1,6 +1,7 @@
 'use client'
 import React, { useState } from 'react'
-import { useParams, useRouter } from 'next/navigation'
+import { useParams} from 'next/navigation'
+import { useRouter } from 'next/router';
 import { toast, useToast } from '@/hooks/use-toast'
 import { verfiySchema } from '@/schemas/verifySchema'
 import { useForm } from 'react-hook-form'
@@ -15,7 +16,10 @@ import { Input } from "@/components/ui/input";
 
 const VerfiyUser = () => {
     const router = useRouter()
-    const params = useParams<{username: string}>()
+     // Extract the last part of the path from the current URL
+    const pathArray = router.asPath.split('/');
+    const lastPart = pathArray[pathArray.length - 1] || pathArray[pathArray.length - 2];
+    // const params = useParams<{username: string}>()
     const {toast} = useToast()
     const [isSubmitting, setIsSubmitting] = useState(false);
 
@@ -28,7 +32,7 @@ const VerfiyUser = () => {
     setIsSubmitting(true)
     try{
         const response = await axios.post('/api/verify-code', {
-            username: params.username,
+            username: lastPart,
             code: data.code
         })
         if(response.data.success){
