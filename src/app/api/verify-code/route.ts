@@ -33,12 +33,12 @@ export async function POST(request: Request){
             return Response.json({
                 success: false,
                 message: "Code is expired, please signup again to get new code"
-            }, {status: 500})
+            }, {status: 401})
         } else{
             return Response.json({
                 success: false,
                 message: "Code is incorrect, please signup again to get new code"
-            }, {status: 500})
+            }, {status: 403})
         }
     } catch (error){
         console.error("Error verifying user", error)

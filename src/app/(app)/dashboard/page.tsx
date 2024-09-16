@@ -2,7 +2,7 @@ import React from 'react'
 
 const page = () => {
   return (
-    <div>sing in apge</div>
+    <div>dashboard</div>
   )
 }
 
