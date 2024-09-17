@@ -38,6 +38,7 @@ export async function POST(request: Request){
             } else{
                 const hashedPassword = await bcrypt.hash
                 (password, 10)
+                existingUserByEmail.username = username;
                 existingUserByEmail.password = hashedPassword;
                 existingUserByEmail.verifyCode = verifyCode;
                 existingUserByEmail.verifyCodeExpiry = new
@@ -69,7 +70,6 @@ export async function POST(request: Request){
         const emailResponse = await sendVarificationEmailSendGrid(
             email, username, verifyCode
         )
-        console.log(emailResponse);
         if(!emailResponse.success){
             return Response.json({
                 success: false,

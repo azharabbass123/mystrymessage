@@ -1,7 +1,7 @@
 'use client'
 import React, { useState } from 'react'
-import { useParams} from 'next/navigation'
-import { useRouter } from 'next/router';
+import { useParams, useRouter} from 'next/navigation'
+//import { useRouter } from 'next/router';
 import { toast, useToast } from '@/hooks/use-toast'
 import { verfiySchema } from '@/schemas/verifySchema'
 import { useForm } from 'react-hook-form'
@@ -16,14 +16,11 @@ import { Input } from "@/components/ui/input";
 
 const VerfiyUser = () => {
     const router = useRouter()
-     // Extract the last part of the path from the current URL
-    const pathArray = router.asPath.split('/');
-    const lastPart = pathArray[pathArray.length - 1] || pathArray[pathArray.length - 2];
-    // const params = useParams<{username: string}>()
+    const params = useParams<{username: string}>()
     const {toast} = useToast()
     const [isSubmitting, setIsSubmitting] = useState(false);
 
-    //zod implementation
+  //zod implementation
   const form = useForm<z.infer<typeof verfiySchema>>({
     resolver: zodResolver(verfiySchema),
   })
@@ -32,7 +29,7 @@ const VerfiyUser = () => {
     setIsSubmitting(true)
     try{
         const response = await axios.post('/api/verify-code', {
-            username: lastPart,
+            username: params.username,
             code: data.code
         })
         if(response.data.success){
@@ -40,7 +37,7 @@ const VerfiyUser = () => {
             title: "Success",
             description: response.data.message
         })
-        router.replace('sign-in')
+        handleRedirect();
         } 
         else{
             toast({
@@ -61,6 +58,19 @@ const VerfiyUser = () => {
       setIsSubmitting(false)
     }
   }
+
+  const handleRedirect = () => {
+    const url = new URL(window.location.href);
+    const pathSegments = url.pathname.split('/').filter(Boolean);
+
+    if (pathSegments.length >= 2) {
+      pathSegments.pop(); 
+
+    }
+    const newPath = `/sign-in`;
+    router.replace(newPath);
+  };
+
   return (
     <div className="flex justify-center items-center
     min-h-screen bg-gray-100">

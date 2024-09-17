@@ -9,11 +9,12 @@ export async function sendVarificationEmailSendGrid(
     verifyCode: string,
 ): Promise<ApiResponse>{
     const msg = {
-        to: email, // Change to your recipient
-        from: 'azhar.diligent@gmail.com', // Change to your verified sender
-        subject: 'Sending with SendGrid is Fun',
+        to: email, 
+        from: 'azhar.diligent@gmail.com', 
+        subject: 'Mystry Message | Account Verification',
         text: username,
-        html: `<strong>${verifyCode}</strong>`,
+        html: `<h1>Well come, ${username}</h1><p>Here is your code to verify
+        your account: <strong>${verifyCode}</strong></p>`,
        }
     try{
         const response = await sgMail.send(msg)
