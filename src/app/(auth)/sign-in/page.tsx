@@ -8,11 +8,9 @@ import { useForm } from 'react-hook-form'
 import Link from "next/link";
 import * as z from 'zod';
 import {zodResolver} from "@hookform/resolvers/zod";
-import axios, { AxiosError } from 'axios'
-import { ApiResponse } from '@/types/apiResponse'
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage} from "@/components/ui/form";
 import { Button } from "@/components/ui/button";
-import { Loader2, Router } from "lucide-react";
+import { Loader2} from "lucide-react";
 import { Input } from "@/components/ui/input";
 import { signIn } from 'next-auth/react'
 
@@ -38,7 +36,7 @@ const SignIn = () => {
       password: data.password
     })
     if(result?.error){
-      if(result.error == "CredentialsSignin"){
+      if(!result.ok){
         toast({
           title: "Login failed",
           description: "Incorrect username or password",

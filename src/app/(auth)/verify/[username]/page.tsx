@@ -23,6 +23,9 @@ const VerfiyUser = () => {
   //zod implementation
   const form = useForm<z.infer<typeof verfiySchema>>({
     resolver: zodResolver(verfiySchema),
+      defaultValues : {
+        code: ''
+      }
   })
 
   const onSubmit = async (data: z.infer<typeof verfiySchema>) => {
@@ -47,7 +50,6 @@ const VerfiyUser = () => {
         }
       setIsSubmitting(false)
     } catch (error){
-        console.error("Error in code verification", error)
         const axiosError = error as AxiosError<ApiResponse>;
         let errorMessage = axiosError.response?.data.message
         toast({
