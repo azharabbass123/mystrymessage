@@ -1,4 +1,3 @@
-"use client"
 import React from 'react'
 import {
     Card,
@@ -28,11 +27,11 @@ import { useToast } from '@/hooks/use-toast'
 
 type MessageCardProps = {
     message: Message
-    onMessageDelete: (messageId: string) => void
+    onMessageDelete: (messageId: any) => void
 }
 
-const MessageCard = ({message, onMessageDelete}):
-MessageCardProps =>{
+const MessageCard = ({message, onMessageDelete}:
+MessageCardProps) =>{
     const {toast} = useToast()
     const handleDeleteConfirm = async () =>{
         const response = await axios.delete<ApiResponse>(`/api/delete-message/${message.
@@ -45,17 +44,17 @@ MessageCardProps =>{
   return (
     <Card>
         <CardHeader>
-            <CardTitle>Card Title</CardTitle>
+            <CardTitle>Message</CardTitle>
             <AlertDialog>
                 <AlertDialogTrigger asChild>
-                    <Button variant="destructive"><X className="w-5 h-5" /> </Button>
+                    <Button variant="destructive" className='w-10 ml-8 ml-0'><X className="w-5 h-5" /> </Button>
                 </AlertDialogTrigger>
                 <AlertDialogContent>
                     <AlertDialogHeader>
                         <AlertDialogTitle>Are you absolutely sure?</AlertDialogTitle>
                         <AlertDialogDescription>
-                            This action cannot be undone. This will permanently delete your
-                            account and remove your data from our servers.
+                            This action cannot be undone. This message will permanently deleted
+                             and remove message data from our servers.
                         </AlertDialogDescription>
                     </AlertDialogHeader>
                     <AlertDialogFooter>
@@ -64,9 +63,10 @@ MessageCardProps =>{
                     </AlertDialogFooter>
                 </AlertDialogContent>
             </AlertDialog>
-            <CardDescription>Card Description</CardDescription>
+            
         </CardHeader>
         <CardContent>
+        <p>{message.content}</p>
         </CardContent>
     </Card>
   )
