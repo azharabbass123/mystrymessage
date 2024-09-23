@@ -67,10 +67,10 @@ const Page = () => {
       var response = await axios.post('/api/suggest-messages')
       const fullResponse = response.data.join('');
       const responseParts = fullResponse.split(' ||');
-      q1 = responseParts[0].trim();
-      q2 = responseParts[1].trim();
-      q3 = responseParts[2].trim();
-
+      setQ1(responseParts[0].trim());
+      setQ2(responseParts[1].trim());
+      setQ3(responseParts[2].trim());
+      
       } catch (error){
         const axiosError = error as AxiosError<ApiResponse>;
         console.log(axiosError.response?.data.message ??
