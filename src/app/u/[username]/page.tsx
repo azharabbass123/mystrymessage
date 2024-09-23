@@ -9,12 +9,15 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import axios, { AxiosError } from 'axios';
 import { Loader } from 'lucide-react';
 import { useParams } from 'next/navigation';
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { useForm } from 'react-hook-form';
 import * as z from "zod";
 
 const Page = () => {
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [q1, setQ1] = useState('');
+  const [q2, setQ2] = useState('');
+  const [q3, setQ3] = useState('');
   const {toast} = useToast();
   const params = useParams<{username: string}>()
   let username = params.username;
@@ -56,12 +59,36 @@ const Page = () => {
       })
       setIsSubmitting(false)
     }
+  } 
+  const suggestMsg = () =>{
+    useEffect(() =>{
+      const fetchMessages = async () => {
+      try {
+      var response = await axios.post('/api/suggest-messages')
+      const fullResponse = response.data.join('');
+      const responseParts = fullResponse.split(' ||');
+      q1 = responseParts[0].trim();
+      q2 = responseParts[1].trim();
+      q3 = responseParts[2].trim();
+
+      } catch (error){
+        const axiosError = error as AxiosError<ApiResponse>;
+        console.log(axiosError.response?.data.message ??
+          "Error checking username"
+        )
+      } finally {
+        
+      }
+      }
+      fetchMessages()
+    })
   }
+ 
   return (
     <>
     <div className="flex justify-center items-center
-    min-h-screen bg-gray-100">
-      <div className="w-full mx-8 p-8 bg-white
+     bg-gray-100">
+      <div className="w-full mx-8 px-8 py-5 bg-white
       rounded-lg shadow-md">
         <div className="text-center">
           <h1 className='text-4xl font-extrabold
@@ -96,6 +123,20 @@ const Page = () => {
         </Form>
       </div>
     </div>
+    <div className="flex justify-center items-center bg-gray-100">
+      <div className="w-full mx-8 px-8 py-2 bg-white
+      rounded-lg shadow-md">
+        <Button onClick={suggestMsg}>Suggest Messages</Button>
+        <p className='space-y-3 mt-2'>Click on any message below to ass it</p>
+        <div className='border-slate-300 p-3'>
+        <h2 className='space-y-2 text-2xl font-bold'>Messages</h2>
+        <div id="response-part1">{q1}</div>
+        <div id="response-part2">{q2}</div>
+        <div id="response-part3">{q3}</div>
+
+        </div>
+        </div>
+        </div>
     </>
   )
 }

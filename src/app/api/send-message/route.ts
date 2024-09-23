@@ -1,4 +1,3 @@
-'use client'
 import UserModel from "@/model/User";
 import { Message } from "@/model/User";
 import dbConnect from "@/lib/dbConnect";
