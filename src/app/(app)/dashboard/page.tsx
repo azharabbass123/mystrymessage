@@ -107,9 +107,10 @@ const page = () => {
     }
   }
 
-  //const {username} = session?.user ?? " "
+  const user = session?.user as User
+  const username = user?.username
   const baseUrl = `${window.location.protocol}//${window.location.host}`
-  const profileUrl = `${baseUrl}/u/tester`
+  const profileUrl = `${baseUrl}/u/${username}`
 
   const copyToClipboard = () =>{
     navigator.clipboard.writeText(profileUrl)

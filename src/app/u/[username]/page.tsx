@@ -13,10 +13,6 @@ import React, { useEffect, useRef, useState } from 'react'
 import { useForm } from 'react-hook-form';
 import * as z from "zod";
 
-interface Question {
-  question: string;
-}
-
 const Page = () => {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [isFetching, setIsFetching] = useState(false);
@@ -26,68 +22,65 @@ const Page = () => {
   const {toast} = useToast();
   const params = useParams<{username: string}>()
   let username = params.username;
+  const { reset, watch, setValue, register } = useForm();
   const form = useForm<z.infer<typeof MessageSchema>>({
     resolver: zodResolver(MessageSchema),
     defaultValues:{
       content: "",
     }
   })
-  const onSubmit = async (data: z.infer<typeof MessageSchema>) =>{
+
+  const onSubmit = (data: z.infer<typeof MessageSchema>) =>{
     setIsSubmitting(true);
-    try{
-      const paylaod = {
-        username: username,
-        content : data.content,
-      }
-      const response = await axios.post<ApiResponse>('/api/send-message', paylaod)
-      if(response.data.success){
-        toast({
-            title: 'Success',
-            description: response.data.message
-          })
-          
-      }else{
-        toast({
-            title: 'Error',
-            description: response.data.message
-          })
-      }
-      setIsSubmitting(false)
-    } catch (error){
-      console.error("Error in sending message", error)
-      const axiosError = error as AxiosError<ApiResponse>;
-      let errorMessage = axiosError.response?.data.message
-      toast({
-        title: "Message sending failed",
-        description: errorMessage,
-        variant: "destructive"
-      })
-      setIsSubmitting(false)
+    const payload = {
+      username: username,
+      content : data.content,
     }
-  } 
- 
+    sendMessage(payload)
+  }
+ async function sendMessage(payload: any){
+  try{
+  const response = await  axios.post<ApiResponse>('/api/send-message', payload)
+  if(response.data.success){
+    toast({
+        title: 'Success',
+        description: response.data.message
+      })
+      
+  }else{
+    toast({
+        title: 'Error',
+        description: response.data.message
+      })
+  }
+  } catch (error){
+    console.error("Error in sending message", error)
+    const axiosError = error as AxiosError<ApiResponse>;
+    let errorMessage = axiosError.response?.data.message
+    toast({
+      title: "Message sending failed",
+      description: errorMessage,
+      variant: "destructive"
+    })
+  } finally {
+    reset();
+    setIsSubmitting(false)
+  }
+} 
   useEffect(() =>{
     const fetchMessages = async () => {
     try {
     setIsFetching(true);
     var response = await axios.post('/api/suggest-messages')
-    // Assuming data is an array of question objects
- 
+
    cleanText.current = response.data
     .replace(/0:"/g, '')   // Remove the leading '0:"'
-    .replace(/"/g, '')
-    .replace(/\\/g, '')    // Remove the trailing '"'
+    .replace(/"/g, '')    // Remove the trailing '"'
+    .replace(/\\/g, '')  // Remove \ symbol
     .split('||')           // Split based on the '||' delimiter
      .map((item: string) => item.trim()) // Trim whitespace from each segment
      .filter((item: string) => item.length > 0); // Remove any empty strings
 
-   //setQ1(cleanText);
-    // const fullResponse = response.data.join('');
-    // const responseParts = fullResponse.split(' ||');
-    // setQ1(responseParts[0].trim());
-    // setQ2(responseParts[1].trim());
-    // setQ3(responseParts[2].trim());
-    
     } catch (error){
       const axiosError = error as AxiosError<ApiResponse>;
       console.log(axiosError.response?.data.message ??
@@ -108,6 +101,11 @@ const Page = () => {
     const msg = target.innerText;
     setNewMessageValue(msg);
     console.log(msg);
+    const payload = {
+      username: username,       
+      content: msg
+    }
+    sendMessage(payload)
   }
   return (
     <>
@@ -128,7 +126,10 @@ const Page = () => {
                 <FormLabel className='w-full'>Send Anynomus Message to @{username}</FormLabel>
                 <FormControl>
                   <Input 
-                    placeholder='Write anynomus message here...' {...field} className='min-w-full' />
+                    {...field}
+                    placeholder='Write anynomus message here...' // Spread field properties
+            
+                    className='min-w-full' />
                 </FormControl>
                 <FormMessage />
               </FormItem>}
@@ -151,7 +152,7 @@ const Page = () => {
     <div className="flex justify-center items-center bg-gray-100">
       <div className="w-full mx-8 px-8 py-2 bg-white
       rounded-lg shadow-md">
-        <Button disabled={isFetching} onClick={fetchAgain}> {
+        <Button disabled={isFetching} onClick={fetchAgain} className='my-3'> {
           isFetching ? (
             <>
               <Loader2 className='mr-2 h-2 w-4 animate-spin'>Fetching...</Loader2>
@@ -160,12 +161,12 @@ const Page = () => {
             'Suggest Messages'
           ) }</Button>
         <p className='space-y-3 mt-2'>Click on any message below to send it</p>
-        <div className='border-slate-300 px-1 mt-4 space-y-4 bg-grey'>
-        <h2 className='space-y-3 text-2xl font-bold'>Messages</h2>
+        <div className='border-2 border-slate-300 px-3 mt-4 space-y-4 bg-grey'>
+        <h2 className='space-y-3 text-2xl font-bold mt-4'>Messages</h2>
         <div className='flex justify-center align-center flex-col'>
           {cleanText.current.map((question: string, index: number) => (
-            <p key={index} onClick={(e) => setMessageValue(e)} className='font-bold mx-4 text-center 
-            p-4 border-black curser-pointer'>{question.trim()}</p> // Add '?' back for display
+            <p key={index} onClick={(e) => setMessageValue(e)} className='font-bold text-center 
+            p-4 border-slate-200 border-2 m-5 border-black cursor-pointer'>{question.trim()}</p> // Add '?' back for display
           ))}
           </div>
         </div>
