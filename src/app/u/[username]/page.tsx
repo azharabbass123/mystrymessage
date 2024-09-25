@@ -138,7 +138,7 @@ const Page = () => {
                 {
                   isSubmitting ? (
                     <>
-                    <Loader className='mr-2 h-2 w-4 animate-spin'>Please wait</Loader>
+                    <Loader2 className='mr-2 h-2 w-4 animate-spin' />Please wait
                     </>
                   ) : (
                     'Send It'
@@ -155,7 +155,7 @@ const Page = () => {
         <Button disabled={isFetching} onClick={fetchAgain} className='my-3'> {
           isFetching ? (
             <>
-              <Loader2 className='mr-2 h-2 w-4 animate-spin'>Fetching...</Loader2>
+              <Loader2 className='mr-2 h-2 w-4 animate-spin' />Fetching...
               </>
           ) : (
             'Suggest Messages'

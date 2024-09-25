@@ -24,7 +24,7 @@ export async function GET(request: Request){
         const user = await UserModel.aggregate([
             {$match: {_id: userId}},
             {$unwind: '$messages'},
-            {$sort: {'messages.created_at': -1}},
+            {$sort: {'messages.createdAt': -1}},
             {$group: {_id: '$_id', messages: {$push: 
                 '$messages'}}}
         ])
@@ -44,11 +44,11 @@ export async function GET(request: Request){
             )
         }
     } catch (error){
-        console.log("Error is fetching message", error)
+        console.log("Error in fetching message", error)
         return Response.json(
             {
                 success: false,
-                message: "Error is fetching message"
+                message: "Error in fetching message"
             }, {status: 500}
         )
     }
