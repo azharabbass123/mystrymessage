@@ -29,14 +29,14 @@ const Page = () => {
         var response = await axios.post('/api/open-chat', {
           prompt: chatCopy
         })
-      const cleanText = response.data
-      .replace(/0:"/g, '')   // Remove the leading '0:"'
-      .replace(/"/g, '') 
-      .replace(/\\/g, '')  // Remove \ symbol
-      .split(' n')           // Split based on the '||' delimiter
-      .map((item: string) => item.trim()) // Trim whitespace from each segment
-      .filter((item: string) => item.length > 0); // Remove any empty strings
-      setChatResponse(cleanText);
+        const cleanText = response.data
+        .replace(/0:"/g, '')   // Remove the leading '0:"'
+        .replace(/"/g, '') 
+        .replace(/\\/g, '')  // Remove \ symbol
+        .split(' n')           // Split based on the '||' delimiter
+        .map((item: string) => item.trim()) // Trim whitespace from each segment
+        .filter((item: string) => item.length > 0); // Remove any empty strings
+        setChatResponse(cleanText);
       }catch(error){
         console.error(error);
       } finally {
