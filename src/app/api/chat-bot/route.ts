@@ -1,13 +1,14 @@
 import axios from "axios";
+import { NextApiRequest, NextApiResponse } from "next";
 
-export async function POST(request: Request) {
-    const { prompt } = await request.json();
+export async function POST(req: NextApiRequest, res: NextApiResponse) {
+    const { prompt } = req.body;
     const API_URL = 'https://api.cohere.ai/generate';
     
     try {
         const response = await axios.post(API_URL, {
             model: 'command-nightly', // Choose the model
-            prompt: prompt,
+            prompt,
             max_tokens: 50,
             temperature: 0.7,
             stop_sequences: ['\n']

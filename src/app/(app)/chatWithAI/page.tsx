@@ -9,6 +9,7 @@ import React, { ChangeEvent, useState } from 'react'
 
 const Page = () => {
     const [chatQuery, setChatQuery] = useState("");
+    const [chatQuerySaved, setChatQuerySaved] = useState("");
     const [chatResponse, setChatResponse] = useState("");
     const [isFetching, setIsFetching] = useState(false);
 
@@ -39,6 +40,7 @@ const Page = () => {
       }catch(error){
         console.error(error);
       } finally {
+        setChatQuerySaved(chatQuery);
         setChatQuery("");
         setIsFetching(false);
       }
@@ -50,9 +52,12 @@ const Page = () => {
           <p className="text-center m-8 px-8 py-5 bg-white
             rounded-lg shadow-md">Enter your queries to get instant response</p>
           </div>) : (
-            <div className="m-8 flex align-center justify-center">
-              <p className='text-center px-8 py-5 rounded-lg shadow-md w-max bg-white'>
-                {chatResponse}
+            <div className="m-8 flex flex-col items-center justify-center">
+              <p className='text-center my-2 px-8 py-5 rounded-lg shadow-md w-[50%] bg-white'>
+                <b>You: </b> {chatQuerySaved}
+                </p>
+              <p className='text-center px-8 py-5 rounded-lg shadow-md w-[50%] bg-white'>
+                <b>AI: </b>{chatResponse}
                 </p>
               </div>
           )}
