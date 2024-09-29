@@ -1,7 +1,7 @@
 import { ApiResponse } from "@/types/apiResponse"
 
-const sgMail = require('@sendgrid/mail')
-sgMail.setApiKey(process.env.SENDGRID_API_KEY)
+import sgMail from '@sendgrid/mail';
+sgMail.setApiKey(process.env.SENDGRID_API_KEY || 'your-default-api-key');
 
 export async function sendVarificationEmailSendGrid(
     email: string,
@@ -21,7 +21,7 @@ export async function sendVarificationEmailSendGrid(
         if(response[0].statusCode === 202){
             return {success: true, message: 'Verification email send successfully'}
         } else {
-            return {success: false, message: response.message}
+            return {success: false, message: 'Error sending email'}
         }
     } catch (error){
         console.log("Error sending email", error)

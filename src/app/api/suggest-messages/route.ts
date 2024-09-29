@@ -3,7 +3,7 @@ import { StreamingTextResponse, CohereStream } from 'ai'
 // IMPORTANT! Set the runtime to edge
 export const runtime = 'edge'
 
-export async function POST(req: Request) {
+export async function POST() {
   // Extract the `prompt` from the body of the request
   //const { prompt } = await req.json()
 const prompt = `Create a list of three open-ended and ongaging

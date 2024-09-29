@@ -2,8 +2,6 @@ import {NextAuthOptions} from "next-auth";
 import CredentialsProvider from "next-auth/providers/credentials";
 import bcrypt from "bcryptjs";
 import dbConnect from "@/lib/dbConnect";
-import userModel from "@/model/User";
-import Email from "next-auth/providers/email";
 import UserModel from "@/model/User";
 
 export const authOptions: NextAuthOptions = {
@@ -16,15 +14,15 @@ export const authOptions: NextAuthOptions = {
                 placeholder: "jsmith"},
                 password: {label: "Password", type: "password"}
             },
-            async authorize(credentials: any): Promise<any>{
+            async authorize(credentials: Record<"email" | "password", string> | undefined): Promise<any>{
                 await dbConnect()
+                if (!credentials) {
+                    throw new Error("Credentials are undefined");
+                }
                 try {
                     const user = await UserModel.findOne({
-                        $or: [
-                            {email: credentials.identifier},
-                            {username: credentials.identifier}
-                        ]
-                    })
+                        $or: [{ email: credentials.email}, { username: credentials.email}],
+                      });
                     if(!user){
                         throw new Error('No user found with this email')
                     }
@@ -38,8 +36,12 @@ export const authOptions: NextAuthOptions = {
                     } else {
                         throw new Error('Password is incorrect')
                     }
-                } catch (err:any) {
-                    throw new Error(err)
+                } catch (err: unknown) {
+                    if (err instanceof Error) {
+                      throw new Error(err.message); // Handle errors more explicitly
+                    } else {
+                      throw new Error("An unknown error occurred");
+                    }
                 }
             }
         })

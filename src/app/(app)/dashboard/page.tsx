@@ -1,5 +1,4 @@
 'use client'
-
 import MessageCard from "@/components/MessageCard"
 import { Button } from "@/components/ui/button"
 import { Separator } from "@/components/ui/separator"
@@ -17,7 +16,7 @@ import { useForm } from "react-hook-form"
 
 
 
-const page = () => {
+const Page = () => {
   const [messages, setMessages] = useState<Message[]>([])
   const [isLoading, setIsLoading] = useState(false)
   const [isSwitchLoading, setSwitchLoading] = useState(false)
@@ -187,4 +186,4 @@ const page = () => {
   )
 }
 
-export default page
+export default Page

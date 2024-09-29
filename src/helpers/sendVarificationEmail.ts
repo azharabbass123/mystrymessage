@@ -8,7 +8,7 @@ export async function sendVarificationEmail(
     verifyCode: string,
 ): Promise<ApiResponse>{
     try{
-        let result  = await resend.emails.send({
+            await resend.emails.send({
             from: 'onboarding@resend.dev',
             to: email,
             subject: 'Mystry Message | Verification code',

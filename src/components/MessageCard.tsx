@@ -2,8 +2,6 @@ import React from 'react'
 import {
     Card,
     CardContent,
-    CardDescription,
-    CardFooter,
     CardHeader,
     CardTitle,
 } from '@/components/ui/card'
@@ -27,7 +25,7 @@ import { useToast } from '@/hooks/use-toast'
 
 type MessageCardProps = {
     message: Message
-    onMessageDelete: (messageId: any) => void
+    onMessageDelete: (messageId: string) => void
 }
 
 const MessageCard = ({message, onMessageDelete}:
@@ -39,7 +37,7 @@ MessageCardProps) =>{
             toast({
                 title: response.data.message
             })
-            onMessageDelete(message._id)
+            onMessageDelete(message._id = "")
     }
   return (
     <Card>

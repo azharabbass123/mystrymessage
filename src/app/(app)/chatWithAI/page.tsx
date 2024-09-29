@@ -1,11 +1,10 @@
 'use client'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
-import { Textarea } from '@/components/ui/textarea'
 import { toast } from '@/hooks/use-toast'
 import axios from 'axios'
 import { ArrowUp, Loader2 } from 'lucide-react'
-import React, { ChangeEvent, useState } from 'react'
+import React, { useState } from 'react'
 
 const Page = () => {
     const [chatQuery, setChatQuery] = useState("");
@@ -24,7 +23,7 @@ const Page = () => {
       }
       try{
         setIsFetching(true);
-        let chatCopy = chatQuery 
+        const chatCopy = chatQuery 
         const response = await axios.post('/api/open-chat', {
           prompt: chatCopy
         })

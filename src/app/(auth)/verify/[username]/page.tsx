@@ -1,8 +1,7 @@
 'use client'
 import React, { useState } from 'react'
 import { useParams, useRouter} from 'next/navigation'
-//import { useRouter } from 'next/router';
-import { toast, useToast } from '@/hooks/use-toast'
+import { useToast } from '@/hooks/use-toast'
 import { verfiySchema } from '@/schemas/verifySchema'
 import { useForm } from 'react-hook-form'
 import * as z from 'zod';
@@ -51,7 +50,7 @@ const VerfiyUser = () => {
       setIsSubmitting(false)
     } catch (error){
         const axiosError = error as AxiosError<ApiResponse>;
-        let errorMessage = axiosError.response?.data.message
+        const errorMessage = axiosError.response?.data.message
         toast({
           title: "Code verification failed",
           description: errorMessage,
