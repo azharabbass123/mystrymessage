@@ -40,8 +40,11 @@ const Page = () => {
       if(username){
         setIsCheckingUsername(true)
         setUsernameMessage('')
+        const data = {
+          userInput: username
+        }
         try{
-          const response = await axios.get(`/api/check-unique-user?username=${username}`)
+          const response = await axios.post(`/api/check-unique-user`, data)
           setUsernameMessage(response.data.message)
         } catch (error){
           const axiosError = error as AxiosError<ApiResponse>;

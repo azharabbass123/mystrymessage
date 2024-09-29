@@ -20,6 +20,7 @@ const Page = () => {
   const [messages, setMessages] = useState<Message[]>([])
   const [isLoading, setIsLoading] = useState(false)
   const [isSwitchLoading, setSwitchLoading] = useState(false)
+  const [profileUrl, setProfileUrl] = useState("")
 
   const {toast} = useToast()
 
@@ -109,8 +110,12 @@ const Page = () => {
 
   const user = session?.user as User
   const username = user?.username
-  const baseUrl = `${window.location.protocol}//${window.location.host}`
-  const profileUrl = `${baseUrl}/u/${username}`
+  useEffect(() => {
+    if (username) {
+      const baseUrl = `${window.location.protocol}//${window.location.host}`;
+      setProfileUrl(`${baseUrl}/u/${username}`);
+    }
+  }, [username]);
 
   const copyToClipboard = () =>{
     navigator.clipboard.writeText(profileUrl)
