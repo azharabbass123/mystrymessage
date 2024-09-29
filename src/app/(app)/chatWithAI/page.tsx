@@ -24,9 +24,8 @@ const Page = () => {
       }
       try{
         setIsFetching(true);
-        let chatCopy = chatQuery
-        console.log(chatCopy)
-        var response = await axios.post('/api/open-chat', {
+        let chatCopy = chatQuery 
+        const response = await axios.post('/api/open-chat', {
           prompt: chatCopy
         })
         const cleanText = response.data
