@@ -1,5 +1,4 @@
 import axios from "axios";
-import { NextApiRequest, NextApiResponse } from "next";
 
 export async function POST(req: Request) {
     const { prompt } = await req.json();
@@ -7,14 +6,14 @@ export async function POST(req: Request) {
     
     try {
         const response = await axios.post(API_URL, {
-            model: 'command-nightly', // Choose the model
+            model: 'command-nightly', 
             prompt,
             max_tokens: 50,
             temperature: 0.7,
             stop_sequences: ['\n']
         }, {
             headers: {
-                'Authorization': `Bearer ${process.env.COHERE_API_KEY}`, // Use API key directly
+                'Authorization': `Bearer ${process.env.COHERE_API_KEY}`, 
                 'Content-Type': 'application/json'
             }
         });
