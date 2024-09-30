@@ -11,7 +11,9 @@ type MongooseUserDocument = Document<object, User> & User;
 const mapUserToNextAuthUser = (user: MongooseUserDocument): NextAuthUser => ({
     id: user._id, // Map MongoDB _id to NextAuth id
     email: user.email,
-    name: user.username,
+    username: user.username,
+    isVerified: user.isVerified,
+    isAcceptingMessages: user.isAcceptingMessage
   });
 
 export const authOptions: NextAuthOptions = {
@@ -31,12 +33,10 @@ export const authOptions: NextAuthOptions = {
                     throw new Error("Credentials are undefined");
                 }
                 const { identifier, password } = credentials;
-                console.log("Attempting to authenticate user with identifier:", credentials);
                 try {
                     const user = await UserModel.findOne({
-                      $or: [{ identifier }, { username: identifier }],
+                      $or: [{ email: identifier }, { username: identifier }],
                     }) as MongooseUserDocument | null;
-            
                     if (!user) {
                       throw new Error("No user found with this email");
                     }
@@ -66,7 +66,7 @@ export const authOptions: NextAuthOptions = {
     callbacks:{
         async jwt({token, user}){
             if(user){
-                token._id = user._id?.toString()
+                token._id = user.id
                 token.isVerified = user.isVerified;
                 token.isAcceptingMessages = user.isAcceptingMessages;
                 token.username = user.username;
@@ -81,6 +81,7 @@ export const authOptions: NextAuthOptions = {
                 session.user.isVerified = token.isVerified
                 session.user.isAcceptingMessages = token.isAcceptingMessages
                 session.user.username = token.username
+                console.log("session stored at the time of login", session)
             }
             return session
         }
