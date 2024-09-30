@@ -46,8 +46,8 @@ const Page = () => {
 
   return (
     <div className='relative h-screen mt-8'>
-      {chatResponse == "" ? (<div>
-          <p className="text-center m-8 px-8 py-5 bg-white
+      {chatResponse == "" ? (<div className='flex flex-col items-center justify-center'>
+          <p className="text-center w-[25%] mt-4 m-8 px-8 py-5 bg-white
             rounded-lg shadow-md">Enter your queries to get instant response</p>
           </div>) : (
             <div className="m-8 flex flex-col items-center justify-center">

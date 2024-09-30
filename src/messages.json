@@ -1,13 +1,14 @@
 [
     {
         "title" : "Message from MystryGuest",
-        "content" : "Do you have any book recommnedations?",
+        "content" : "What do you like to read in spare time?",
         "received" : "1 day ago"
     },
     {
         "title" : "Message from MystryGuest",
-        "content" : "Do you have any movie recommnedations?",
+        "content" : "What type of movies you like to watch?",
         "received" : "2 days ago"
+        
     },
     {
         "title" : "Message from MystryGuest",

@@ -28,6 +28,8 @@ const Navbar = () => {
           </>
         ) : (
           <Link href="/sign-in">
+            <Link href='/chatWithAI' className='m-2 p-2 border-2 border-slate-300 rounded-lg
+           hover:bg-black hover:text-white transition-colors duration-300'>Chat With AI</Link>
             <Button className='w-full md:w-auto'>Login</Button>
           </Link>
         )}

@@ -32,9 +32,8 @@ const Home = () => {
                 <div className="p-1">
                   <Card>
                     <CardHeader>
-                      {message.title}
                     </CardHeader>
-                    <CardContent className="flex aspect-square items-center justify-center p-6">
+                    <CardContent className="flex aspect-square items-center justify-center p-2">
                       <span className="text-lg font-semibold">{message.content}</span>
                     </CardContent>
                   </Card>
