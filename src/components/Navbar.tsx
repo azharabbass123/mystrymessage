@@ -17,7 +17,7 @@ const Navbar = () => {
         <a className='text-xl font-bold mb-4 mb:mb-0' href="/">Mystry Message</a>
         {session ? (
           <>
-          <span className='mr-4'>Welcome, {user?.username || user?.email}</span>
+          <h2 className='mr-4 font-bold'>{user?.username || user?.email}</h2>
           <div>
           <Link href='/chatWithAI' className='m-2 p-2 border-2 border-slate-300 rounded-lg
            hover:bg-black hover:text-white transition-colors duration-300'>Chat With AI</Link>

@@ -6,8 +6,8 @@ import { useToast } from '@/hooks/use-toast';
 import { MessageSchema } from '@/schemas/messageSchema';
 import { ApiResponse } from '@/types/apiResponse';
 import { zodResolver } from '@hookform/resolvers/zod';
-import axios, { AxiosError, AxiosResponse } from 'axios';
-import { Loader, Loader2 } from 'lucide-react';
+import axios, { AxiosError } from 'axios';
+import { Loader2 } from 'lucide-react';
 import { useParams } from 'next/navigation';
 import React, { useEffect, useRef, useState } from 'react'
 import { useForm } from 'react-hook-form';
@@ -16,13 +16,12 @@ import * as z from "zod";
 const Page = () => {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [isFetching, setIsFetching] = useState(false);
-  const [newMessageValue, setNewMessageValue] = useState<string>('');
-  let [fetchMsgCount, setFetchMsgCount] = useState(0);
+  const [fetchMsgCount, setFetchMsgCount] = useState(0);
   const cleanText = useRef<string[]>([]);
   const {toast} = useToast();
   const params = useParams<{username: string}>()
-  let username = params.username;
-  const { reset, watch, setValue, register } = useForm();
+  const username = params.username;
+  const { reset } = useForm();
   const form = useForm<z.infer<typeof MessageSchema>>({
     resolver: zodResolver(MessageSchema),
     defaultValues:{
@@ -38,7 +37,7 @@ const Page = () => {
     }
     sendMessage(payload)
   }
- async function sendMessage(payload: any){
+ async function sendMessage(payload: object){
   try{
   const response = await  axios.post<ApiResponse>('/api/send-message', payload)
   if(response.data.success){
@@ -56,7 +55,7 @@ const Page = () => {
   } catch (error){
     console.error("Error in sending message", error)
     const axiosError = error as AxiosError<ApiResponse>;
-    let errorMessage = axiosError.response?.data.message
+    const errorMessage = axiosError.response?.data.message
     toast({
       title: "Message sending failed",
       description: errorMessage,
@@ -71,7 +70,7 @@ const Page = () => {
     const fetchMessages = async () => {
     try {
     setIsFetching(true);
-    var response = await axios.post('/api/suggest-messages')
+    const response = await axios.post('/api/suggest-messages')
 
    cleanText.current = response.data
     .replace(/0:"/g, '')   // Remove the leading '0:"'
@@ -94,13 +93,11 @@ const Page = () => {
   },[fetchMsgCount])
   
   const fetchAgain = () =>{
-    setFetchMsgCount(fetchMsgCount++);
+    setFetchMsgCount(fetchMsgCount + 1);
   }
   const setMessageValue = (e: React.MouseEvent<HTMLParagraphElement>) =>{
     const target = e.currentTarget;
     const msg = target.innerText;
-    setNewMessageValue(msg);
-    console.log(msg);
     const payload = {
       username: username,       
       content: msg

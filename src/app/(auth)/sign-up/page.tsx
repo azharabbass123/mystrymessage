@@ -4,19 +4,18 @@ import { useForm } from "react-hook-form";
 import * as z from "zod";
 import Link from "next/link";
 import { useState, useEffect } from "react";
-import {useDebounceValue, useDebounceCallback} from "usehooks-ts";
+import {useDebounceCallback} from "usehooks-ts";
 import { useToast } from "@/hooks/use-toast";
 import { useRouter } from "next/navigation";
 import { signUpSchema } from "@/schemas/signUpSchema";
 import axios, {AxiosError} from "axios";
 import { ApiResponse } from "@/types/apiResponse";
-import { Description } from "@radix-ui/react-toast";
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage} from "@/components/ui/form";
 import { Button } from "@/components/ui/button";
 import { Loader2 } from "lucide-react";
 import { Input } from "@/components/ui/input";
 
-const page = () => {
+const Page = () => {
   const [username, setUsername] = useState('');
   const [usernameMessage, setUsernameMessage] = useState('');
   const [isCheckingUsername, setIsCheckingUsername] = useState(false);
@@ -41,8 +40,11 @@ const page = () => {
       if(username){
         setIsCheckingUsername(true)
         setUsernameMessage('')
+        const data = {
+          userInput: username
+        }
         try{
-          const response = await axios.get(`/api/check-unique-user?username=${username}`)
+          const response = await axios.post(`/api/check-unique-user`, data)
           setUsernameMessage(response.data.message)
         } catch (error){
           const axiosError = error as AxiosError<ApiResponse>;
@@ -78,7 +80,7 @@ const page = () => {
     } catch (error){
       console.error("Error in singup of user", error)
       const axiosError = error as AxiosError<ApiResponse>;
-      let errorMessage = axiosError.response?.data.message
+      const errorMessage = axiosError.response?.data.message
       toast({
         title: "Signup failed",
         description: errorMessage,
@@ -171,4 +173,4 @@ const page = () => {
   )
 }
 
-export default page
+export default Page

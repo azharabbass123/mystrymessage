@@ -2,9 +2,17 @@ import {NextAuthOptions} from "next-auth";
 import CredentialsProvider from "next-auth/providers/credentials";
 import bcrypt from "bcryptjs";
 import dbConnect from "@/lib/dbConnect";
-import userModel from "@/model/User";
-import Email from "next-auth/providers/email";
 import UserModel from "@/model/User";
+import {User} from "@/model/User";
+import { Document } from "mongoose"; // Import Mongoose Document type
+import { User as NextAuthUser } from "next-auth"; // Import the NextAuth User type
+type MongooseUserDocument = Document<object, User> & User;
+// Mapping MongoDB User to NextAuth User
+const mapUserToNextAuthUser = (user: MongooseUserDocument): NextAuthUser => ({
+    id: user._id, // Map MongoDB _id to NextAuth id
+    email: user.email,
+    name: user.username,
+  });
 
 export const authOptions: NextAuthOptions = {
     providers: [
@@ -16,30 +24,40 @@ export const authOptions: NextAuthOptions = {
                 placeholder: "jsmith"},
                 password: {label: "Password", type: "password"}
             },
-            async authorize(credentials: any): Promise<any>{
+            async authorize(credentials: Record<"email" | "password", string> | undefined): Promise<NextAuthUser | null>{
+               
                 await dbConnect()
+                if (!credentials) {
+                    throw new Error("Credentials are undefined");
+                }
+                const { email, password } = credentials;
                 try {
                     const user = await UserModel.findOne({
-                        $or: [
-                            {email: credentials.identifier},
-                            {username: credentials.identifier}
-                        ]
-                    })
-                    if(!user){
-                        throw new Error('No user found with this email')
+                      $or: [{ email }, { username: email }],
+                    }) as MongooseUserDocument | null;
+            
+                    if (!user) {
+                      throw new Error("No user found with this email");
                     }
-                    if(!user.isVerified){
-                        throw new Error("Please verify your account before login")
+            
+                    if (!user.isVerified) {
+                      throw new Error("Please verify your account before login");
                     }
-                    const isPasswordCorrect = await bcrypt.compare(credentials.password,
-                        user.password)
-                    if(isPasswordCorrect){
-                        return user
+            
+                    const isPasswordCorrect = await bcrypt.compare(password, user.password);
+            
+                    if (isPasswordCorrect) {
+                      // Return the user mapped to the NextAuth user format
+                      return mapUserToNextAuthUser(user);
                     } else {
-                        throw new Error('Password is incorrect')
+                      throw new Error("Password is incorrect");
                     }
-                } catch (err:any) {
-                    throw new Error(err)
+                  } catch (err: unknown) {
+                    if (err instanceof Error) {
+                      throw new Error(err.message); // Handle errors more explicitly
+                    } else {
+                      throw new Error("An unknown error occurred");
+                    }
                 }
             }
         })

@@ -1,5 +1,4 @@
 'use client'
-
 import MessageCard from "@/components/MessageCard"
 import { Button } from "@/components/ui/button"
 import { Separator } from "@/components/ui/separator"
@@ -10,17 +9,18 @@ import { acceptMessageSchema } from "@/schemas/acceptMessage"
 import { ApiResponse } from "@/types/apiResponse"
 import { zodResolver } from "@hookform/resolvers/zod"
 import axios, { AxiosError } from "axios"
-import { FlaskConical, Loader2, RefreshCcw } from "lucide-react"
+import { Loader2, RefreshCcw } from "lucide-react"
 import { useSession } from "next-auth/react"
 import { useCallback, useEffect, useState } from "react"
 import { useForm } from "react-hook-form"
-import { any } from "zod"
 
 
-const page = () => {
+
+const Page = () => {
   const [messages, setMessages] = useState<Message[]>([])
   const [isLoading, setIsLoading] = useState(false)
   const [isSwitchLoading, setSwitchLoading] = useState(false)
+  const [profileUrl, setProfileUrl] = useState("")
 
   const {toast} = useToast()
 
@@ -52,7 +52,7 @@ const page = () => {
     } finally {
       setSwitchLoading(false)
     }
-  }, [setValue])
+  }, [setValue, toast])
 
   const fetchMessages = useCallback( async(refresh: boolean = false) =>{
     setIsLoading(true)
@@ -79,7 +79,7 @@ const page = () => {
       setIsLoading(false)
       setSwitchLoading(false)
     }
-  }, [setIsLoading, setMessages])
+  }, [setIsLoading, setMessages, toast])
 
   useEffect(() =>{
     if(!session || !session.user) return 
@@ -110,8 +110,12 @@ const page = () => {
 
   const user = session?.user as User
   const username = user?.username
-  const baseUrl = `${window.location.protocol}//${window.location.host}`
-  const profileUrl = `${baseUrl}/u/${username}`
+  useEffect(() => {
+    if (username) {
+      const baseUrl = `${window.location.protocol}//${window.location.host}`;
+      setProfileUrl(`${baseUrl}/u/${username}`);
+    }
+  }, [username]);
 
   const copyToClipboard = () =>{
     navigator.clipboard.writeText(profileUrl)
@@ -187,4 +191,4 @@ const page = () => {
   )
 }
 
-export default page
+export default Page

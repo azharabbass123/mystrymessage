@@ -1,7 +1,8 @@
 import axios from "axios";
+import { NextApiRequest, NextApiResponse } from "next";
 
 export async function POST(req: Request) {
-    //const { prompt } = req.body;
+    const { prompt } = await req.json();
     const API_URL = 'https://api.cohere.ai/generate';
     
     try {

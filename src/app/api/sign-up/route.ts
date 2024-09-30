@@ -1,10 +1,7 @@
 import dbConnect from "@/lib/dbConnect";
 import UserModel from "@/model/User";
 import bcrypt from "bcryptjs";
-
-import { sendVarificationEmail } from "@/helpers/sendVarificationEmail";
 import { sendVarificationEmailSendGrid } from "@/helpers/sendVarificationEmailSendGrid";
-import { error } from "console";
 
 export async function POST(request: Request){
     await dbConnect()
