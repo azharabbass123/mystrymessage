@@ -18,7 +18,7 @@ export async function POST(req: Request) {
             }
         });
         
-        // Return a response object
+        // Return a response obj
         return new Response(JSON.stringify({ text: response.data.generations[0].text.trim() }), {
             status: 200,
             headers: {
