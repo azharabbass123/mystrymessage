@@ -20,20 +20,21 @@ export const authOptions: NextAuthOptions = {
             id: "credentials",
             name: "Credentials",
             credentials: {
-                email: {label: "Email", type: "text",
+                identifier: {label: "Email", type: "text",
                 placeholder: "jsmith"},
                 password: {label: "Password", type: "password"}
             },
-            async authorize(credentials: Record<"email" | "password", string> | undefined): Promise<NextAuthUser | null>{
+            async authorize(credentials: Record<"identifier" | "password", string> | undefined): Promise<NextAuthUser | null>{
                
                 await dbConnect()
                 if (!credentials) {
                     throw new Error("Credentials are undefined");
                 }
-                const { email, password } = credentials;
+                const { identifier, password } = credentials;
+                console.log("Attempting to authenticate user with identifier:", credentials);
                 try {
                     const user = await UserModel.findOne({
-                      $or: [{ email }, { username: email }],
+                      $or: [{ identifier }, { username: identifier }],
                     }) as MongooseUserDocument | null;
             
                     if (!user) {

@@ -29,6 +29,7 @@ const SignIn = () => {
   })
   const onSubmit = async (data: z.infer<typeof signInSchema>) => {
     setIsSubmitting(true)
+    console.log(data);
     const result = await signIn('credentials', {
       redirect: false,
       identifier: data.identifier,
@@ -38,7 +39,7 @@ const SignIn = () => {
       if(!result.ok){
         toast({
           title: "Login failed",
-          description: "Incorrect username or password",
+          description: result.error,
           variant: "destructive"
         })
       } else{
