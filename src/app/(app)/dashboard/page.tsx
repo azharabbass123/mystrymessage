@@ -60,7 +60,6 @@ const Page = () => {
     try{
       const response = await axios.get<ApiResponse>('/api/get-messages')
       setMessages(response.data.messages || [])
-      console.log(response.data);
       if(refresh){
         toast({
           title: "Refreshed",
